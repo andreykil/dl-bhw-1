@@ -29,7 +29,7 @@ class ResNet18(nn.Module):
 
         self.model.layer4[1].bn2 = nn.Sequential(
             nn.BatchNorm2d(512),
-            nn.Dropout(0.3)
+            nn.Dropout(0.2)
         )
     
         # Финальный классификатор
