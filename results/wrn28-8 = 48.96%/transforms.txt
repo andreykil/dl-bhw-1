@@ -1,0 +1,18 @@
+def get_train_transforms():
+    return transforms.Compose([
+        transforms.RandomCrop(40, padding=4, padding_mode='reflect'),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.ColorJitter(
+            brightness=0.4,   
+            contrast=0.4,     
+            saturation=0.4,   
+            hue=0.1           
+        ),
+        transforms.AutoAugment(
+            policy=transforms.AutoAugmentPolicy.CIFAR10,
+            interpolation=transforms.InterpolationMode.BILINEAR
+        ),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=TRAIN_MEAN, std=TRAIN_STD),
+        AddGaussianNoise(std=0.01)
+    ])
