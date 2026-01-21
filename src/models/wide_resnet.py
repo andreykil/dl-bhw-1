@@ -3,10 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class BasicBlock(nn.Module):
-    """
-    Pre-activation WideResNet block:
-    BN -> ReLU -> Conv -> Dropout -> BN -> ReLU -> Conv
-    """
     def __init__(self, in_channels, out_channels, stride, dropout_rate):
         super().__init__()
 
@@ -41,10 +37,6 @@ class BasicBlock(nn.Module):
 
 
 class WideResNet(nn.Module):
-    """
-    WideResNet.
-    Глубина должна быть 6n + 4 (28, 40).
-    """
     def __init__(self, depth=28, widen_factor=8, num_classes=200, dropout_rate=0.1):
         super().__init__()
 
@@ -58,13 +50,13 @@ class WideResNet(nn.Module):
             64 * widen_factor,
         ]
 
-        # Initial conv
+        # Начальный слой
         self.conv1 = nn.Conv2d(
             3, widths[0],
             kernel_size=3, stride=1, padding=1, bias=False
         )
 
-        # Stages
+        # Стадии
         self.stage1 = self._make_stage(
             widths[0], widths[1], n_blocks, stride=1, dropout_rate=dropout_rate
         )
@@ -75,7 +67,7 @@ class WideResNet(nn.Module):
             widths[2], widths[3], n_blocks, stride=2, dropout_rate=dropout_rate
         )
 
-        # Head
+        # Голова
         self.bn = nn.BatchNorm2d(widths[3])
         self.fc = nn.Linear(widths[3], num_classes)
 
@@ -99,7 +91,7 @@ class WideResNet(nn.Module):
                 nn.init.normal_(m.weight, 0, 0.01)
                 if m.bias is not None:
                     nn.init.constant_(m.bias, 0)
-                    
+
             if isinstance(m, BasicBlock):
                 nn.init.constant_(m.bn2.weight, 0.0)
 
